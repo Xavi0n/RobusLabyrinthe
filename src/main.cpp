@@ -1,27 +1,33 @@
 #include <Arduino.h>
 #include <LibRobus.h>
+#include "DetectionState.h"
 
-const int trigPin = 9;
-const int echoPin =10;
-float duration, distance;
+#define IR_GREEN_PIN 2
+#define IR_RED_PIN 3
+
+volatile bool isGreenLedOn, isRedLedOn;
+
+void irGreenLed(){
+  isGreenLedOn = !digitalRead(IR_GREEN_PIN);
+}
+
+void irRedLed(){
+  isRedLedOn = !digitalRead(IR_RED_PIN);
+}
 
 void setup() {
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
+  pinMode(IR_GREEN_PIN, INPUT_PULLUP);
+  pinMode(IR_RED_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(IR_GREEN_PIN), irGreenLed, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(IR_RED_PIN), irRedLed, CHANGE);
   Serial.begin(9600);
 }
 
 void loop() {
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
+  DetectionState detectionState = getDetection(isGreenLedOn, isRedLedOn);
 
-  duration = pulseIn(echoPin, HIGH);
-  distance = (duration*.0343)/2;
+  Serial.print("Détection:");
+  Serial.println(detectionState);
 
-  Serial.print("Distance: ");
-  Serial.println(distance);
-  delay(100);
+  delay(1000);
 }
