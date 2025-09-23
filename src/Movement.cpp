@@ -4,17 +4,13 @@
 #include "Circuit.h"
 #include "DetectionState.h"
 
-unsigned char ucCurrentDirection;
-unsigned char ucWhereIsRobotY;
-unsigned char ucWhereIsRobotX;
-
 void moveforward(){
-    //if(bDangerCheck() == false){
-    ucUpdateRobotPosition(ucCurrentDirection);
-    //}
-    //else {
+    if(bDangerCheck() == false){
+        vUpdateRobotPosition();
+    }
+    else {
     //[ADD WHAT WE WANT IT TO DO HERE]
-    //}
+    }
    
     //move forward one unit (50cm) using PID
 }
@@ -27,11 +23,11 @@ void turnRight(){
         //turn left wheel forwards and right wheel backwards until faced right
         //reverse a bit (so robot is perfectly in the center of the «square»)
     
-    ucCurrentDirection = ucUpdateRobotDirection(RIGHT);
-    //if(bDangerCheck() == true)
-        //{
+    vUpdateRobotDirection(RIGHT);
+    if(bDangerCheck() == true)
+    {
         //do a full u turn
-        //}
+    }
 }
 
 void turnLeft(){
@@ -42,9 +38,13 @@ void turnLeft(){
         //turn right wheel forwards and left wheel backwards until faced left
         //reverse a bit (so robot is perfectly in the center of the «square»)
 
-    ucCurrentDirection = ucUpdateRobotDirection(LEFT);
-    //if(bDangerCheck() == true)
-        //{
+    vUpdateRobotDirection(LEFT);
+    if(bDangerCheck() == true)
+    {
         //do a full u turn
-        //}
+    }
+}
+
+void uTurn(){
+    
 }
