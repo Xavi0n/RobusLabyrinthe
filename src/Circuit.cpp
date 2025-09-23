@@ -62,7 +62,7 @@ bool bGetNearbyLines(unsigned char ucRobotDirection, unsigned char ucWhereIsRobo
     switch (ucRobotDirection)
     {
         case NORTH:
-            if (ucWhereAreLines[ucWhereIsRobotY + 1][ucWhereIsRobotX] == 1)//Add 1 since the position represents the square between edges
+            if (uctWhereAreLines[ucWhereIsRobotY + 1][ucWhereIsRobotX] == 1)//Add 1 since the position represents the square between edges
             {
                 Serial.println("Line in front");
                 bLineInFront = true;
@@ -70,7 +70,7 @@ bool bGetNearbyLines(unsigned char ucRobotDirection, unsigned char ucWhereIsRobo
             break;
 
         case EAST:
-            if (ucWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX + 1] == 1)//Add 1 since the position represents the square between edges
+            if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX + 1] == 1)//Add 1 since the position represents the square between edges
             {
                 Serial.println("Line in front");
                 bLineInFront = true;
@@ -78,7 +78,7 @@ bool bGetNearbyLines(unsigned char ucRobotDirection, unsigned char ucWhereIsRobo
             break;
 
         case SOUTH:
-            if (ucWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX] == 1)//No need to subtract 1 since the position represents the square between edges
+            if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX] == 1)//No need to subtract 1 since the position represents the square between edges
             {
                 Serial.println("Line in front");
                 bLineInFront = true;
@@ -86,7 +86,7 @@ bool bGetNearbyLines(unsigned char ucRobotDirection, unsigned char ucWhereIsRobo
             break;
 
         case WEST:
-            if (ucWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX] == 1)//No need to subtract 1 since the position represents the square between edges
+            if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX] == 1)//No need to subtract 1 since the position represents the square between edges
             {
                 Serial.println("Line in front");
                 bLineInFront = true;
