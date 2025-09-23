@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include <LibRobus.h>
+#include "Circuit.h"
+#include "main.h"
 
 const int trigPin = 9;
 const int echoPin =10;
@@ -8,7 +10,7 @@ float duration, distance;
 void setup() {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  Serial.begin(9600);
+  Serial.begin(57600);
 }
 
 void loop() {
