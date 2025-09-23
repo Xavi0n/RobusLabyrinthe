@@ -10,17 +10,18 @@
 // 1 means line present, 0 means no line. Each element of the table represents the edge
 // of a 50x50 cm square in the maze.
 // The first line of the table represents the start line of the maze, which means maze is flipped in the table vs reality.
-unsigned char uctWhereAreLines [10][10] = {
-  {0,0,0,0,0,0,0,0,0,0},
-  {0,0,0,0,0,0,0,0,0,0},
-  {0,0,0,0,0,0,0,0,0,0},
-  {0,0,0,0,0,0,0,0,0,0},
-  {0,0,0,0,0,0,0,0,0,0},
-  {0,0,0,0,0,0,0,0,0,0},
-  {0,0,0,0,0,0,0,0,0,0},
-  {0,0,0,0,0,0,0,0,0,0},
-  {0,0,0,0,0,0,0,0,0,0},
-  {0,0,0,0,0,0,0,0,0,0}
+unsigned char uctWhereAreLines [11][4] = {
+  {0,0,0,},
+  {0,0,0,},
+  {0,0,0,},
+  {0,0,0,},
+  {0,0,0,},
+  {0,0,0,},
+  {0,0,0,},
+  {0,0,0,},
+  {0,0,0,},
+  {0,0,0,},
+  {0,0,0,}
 };
 
 unsigned char ucRobotDirection = NORTH;
