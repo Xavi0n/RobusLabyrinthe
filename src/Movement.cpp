@@ -2,48 +2,50 @@
 #include <LibRobus.h>
 #include "Circuit.h"
 #include "DetectionState.h"
+#include "Movement.h"
 
 void moveforward(){
     if(bDangerCheck() == false){
         vUpdateRobotPosition();
+        //move forward one unit (50cm) using PID
     }
     else {
     //[ADD WHAT WE WANT IT TO DO HERE]
     }
-   
-    //move forward one unit (50cm) using PID
 }
 
 void turnRight(){
     
     //turn right using PID:
-        //go forward a bit (so rotation point is in the middle)
+        //reverse a bit (so rotation point is in the middle)
         //stop
         //turn left wheel forwards and right wheel backwards until faced right
-        //reverse a bit (so robot is perfectly in the center of the «square»)
+        //go forward a bit (so robot is perfectly in the center of the «square»)
     
     vUpdateRobotDirection(RIGHT);
     if(bDangerCheck() == true)
     {
-        //do a full u turn
+        uTurn();
     }
 }
 
 void turnLeft(){
 
     //turn left using PID:
-        //go forward a bit (so rotation point is in the middle)
+        //reverse a bit (so rotation point is in the middle)
         //stop
         //turn right wheel forwards and left wheel backwards until faced left
-        //reverse a bit (so robot is perfectly in the center of the «square»)
+        //go forward a bit (so robot is perfectly in the center of the «square»)
 
     vUpdateRobotDirection(LEFT);
     if(bDangerCheck() == true)
     {
         //do a full u turn
+        uTurn();
     }
 }
 
 void uTurn(){
-    
+    //be careful about using the turn commands to make it do a u turn, 
+    //cuz it might trigger the danger check and make it do more than a 180 
 }
