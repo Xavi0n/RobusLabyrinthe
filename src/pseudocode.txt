@@ -62,10 +62,10 @@ avance(){
 tourne à drote(){
     
     tourne à droite en utilisant le PID:
-        avance un peu (pour que le point de rotation soit au centre)
+        reculee un peu (pour que le point de rotation soit au centre)
         arrête
         avance roue gauche et recule roue droite jusqu'à ce que le robot ait tourné de 90 deg
-        recule un peu (pour que le robot soit centré avec la 'case')
+        avance un peu (pour que le robot soit centré avec la 'case')
 
     dit au code d'orientation que le robot est tourné vers la droite
 
