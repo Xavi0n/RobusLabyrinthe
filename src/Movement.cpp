@@ -1,5 +1,13 @@
 #include "Movement.h"
 
+MoveEnum currentMove;
+
+void initMovement(){
+    initPID();
+    setPIDDesiredPulse(0, 0);
+    currentMove = MoveEnum::NONE;
+}
+
 void moveForward(){
     if(bDangerCheck() == false){
         //vUpdateRobotPosition();
@@ -11,12 +19,14 @@ void moveForward(){
 }
 
 void turnRight(){
-    
+    currentMove = MoveEnum::TURN_RIGHT;
+    setPIDDesiredPulse(-TURNING_SPEED, TURNING_SPEED);
     //turn right using PID:
         //reverse a bit (so rotation point is in the middle)
         //stop
         //turn left wheel forwards and right wheel backwards until faced right
         //go forward a bit (so robot is perfectly in the center of the «square»)
+
     
     vUpdateRobotDirection(RIGHT);
     if(bDangerCheck() == true)
@@ -44,4 +54,34 @@ void turnLeft(){
 void uTurn(){
     //be careful about using the turn commands to make it do a u turn, 
     //cuz it might trigger the danger check and make it do more than a 180 
+}
+
+void stop(){
+    setPIDDesiredPulse(0, 0);
+    currentMove = MoveEnum::TURN_RIGHT;
+    resetCoveredDistance();
+}
+
+void runMovementController(){
+    // Test if the move is done
+    Serial.print(">GetRightWheelCoveredDistance:");
+    Serial.print(getRightWheelCoveredDistance());
+    Serial.println();
+    switch(currentMove){
+        case MoveEnum::TURN_RIGHT: {
+            if(getRightWheelCoveredDistance() >= QUARTER_TURN_DISTANCE){
+                stop();
+            }
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+
+    runPIDController();
+}
+
+MoveEnum getCurrentMove(){
+    return currentMove;
 }

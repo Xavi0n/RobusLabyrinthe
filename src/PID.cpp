@@ -23,16 +23,20 @@ void initPID(){
 void setPIDDesiredPulse(int newLeftMotorDesiredPulse, int newRightMotorDesiredPulse){
     leftMotorDesiredPulse = newLeftMotorDesiredPulse;
     rightMotorDesiredPulse = newRightMotorDesiredPulse;
+    iLeftMotorError = 0;
+    iRightMotorError = 0;
+    lastLeftMotorError = 0;
+    lastRightMotorError = 0;
 }
 
 void runPIDController() {
     unsigned long currentTime = millis();
     unsigned long elapsedTime = currentTime - previousTime;
     
-    float leftMotorCalculatedPulse = (leftMotorDesiredPulse * elapsedTime / 1000.0);
-    float rightMotorCalculatedPulse = (rightMotorDesiredPulse * elapsedTime / 1000.0);
-    int leftMotorPulse = ENCODER_ReadReset(LEFT);
-    int rightMotorPulse = ENCODER_ReadReset(RIGHT);
+    float leftMotorCalculatedPulse = (abs(leftMotorDesiredPulse) * elapsedTime / 1000.0);
+    float rightMotorCalculatedPulse = (abs(rightMotorDesiredPulse) * elapsedTime / 1000.0);
+    int leftMotorPulse = abs(ENCODER_ReadReset(LEFT));
+    int rightMotorPulse = abs(ENCODER_ReadReset(RIGHT));
     
     leftMotorTotalPulse += leftMotorPulse;
     rightMotorTotalPulse += rightMotorPulse;
@@ -58,8 +62,15 @@ void runPIDController() {
     float outRightMotor = kp * rightMotorError + ki * iRightMotorError + kd * dRightMotorError;
     
     // Range 0-1
-    outLeftMotor = constrainFloat(outLeftMotor, 0.0, 1.0);
-    outRightMotor = constrainFloat(outRightMotor, 0.0, 1.0);
+    outLeftMotor = constrainFloat(outLeftMotor, 0, 1.0);
+    outRightMotor = constrainFloat(outRightMotor, 0, 1.0);
+
+    if(leftMotorDesiredPulse < 0){
+        outLeftMotor = -outLeftMotor;
+    }
+    if(rightMotorDesiredPulse < 0){
+        outRightMotor = -outRightMotor;
+    }
 
     MOTOR_SetSpeed(RIGHT, outRightMotor);
     MOTOR_SetSpeed(LEFT, outLeftMotor);
@@ -97,6 +108,18 @@ void runPIDController() {
 float getCoveredDistance(){
     float combinedAveragePulse = (leftMotorTotalPulse + rightMotorTotalPulse) / 2;
     float distanceEnPouce = combinedAveragePulse / PULSE_PER_TURN * ROUE_DIAMETRE;
+    float distance = distanceEnPouce * POUCE_TO_CM;
+    return distance;
+}
+
+float getRightWheelCoveredDistance(){
+    float distanceEnPouce = (float)rightMotorTotalPulse / PULSE_PER_TURN * ROUE_DIAMETRE;
+    float distance = distanceEnPouce * POUCE_TO_CM;
+    return distance;
+}
+
+float getLeftWheelCoveredDistance(){
+    float distanceEnPouce = (float)leftMotorTotalPulse / PULSE_PER_TURN * ROUE_DIAMETRE;
     float distance = distanceEnPouce * POUCE_TO_CM;
     return distance;
 }

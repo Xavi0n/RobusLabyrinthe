@@ -2,6 +2,7 @@
 #include <LibRobus.h>
 #include "Circuit.h"
 #include "DetectionState.h"
+#include "Movement.h"
 #include "PID.h"
 
 #define IR_GREEN_PIN 2
@@ -19,26 +20,23 @@ void irRedLed(){
 
 void setup() {
     BoardInit();
-    //initPID();
     pinMode(IR_GREEN_PIN, INPUT_PULLUP);
     pinMode(IR_RED_PIN, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(IR_GREEN_PIN), irGreenLed, CHANGE);
     attachInterrupt(digitalPinToInterrupt(IR_RED_PIN), irRedLed, CHANGE);
     Serial.begin(115200);
-    //setPIDDesiredPulse(3200, 3200);
+    turnRight();
 }
 
 void loop() {
-  DetectionState detectionState = getDetection(isGreenLedOn, isRedLedOn);
+    DetectionState detectionState = getDetection(isGreenLedOn, isRedLedOn);
 
-  Serial.print("Détection:");
-  Serial.println(detectionState);
+    Serial.print("Détection:");
+    Serial.println(detectionState);
 
-  /*runPIDController();
-    
-    if(getCoveredDistance() >= 50){
-         setPIDDesiredPulse(0, 0);
-    }*/
+    if(getCurrentMove() != MoveEnum::NONE){
+        runMovementController();
+    }
 
-  delay(1000);
+    delay(50);
 }
