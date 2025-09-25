@@ -51,6 +51,14 @@ void loop() {
 
   Serial.print(">");
 
+  Serial.print("LeftPulse:");
+  Serial.print(leftMotorPulse);
+  Serial.print(",");
+
+  Serial.print("RightPulse:");
+  Serial.print(rightMotorPulse);
+  Serial.print(",");
+
   Serial.print("PLeft:");
   Serial.print(leftMotorError);
   Serial.print(",");
