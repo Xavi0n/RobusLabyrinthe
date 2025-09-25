@@ -7,7 +7,7 @@
 #include "DetectionState.h"
 #include "PID.h"
 
-#define DIAMETRE 19
+#define DIAMETRE 0.19
 #define QUARTER_TURN_DISTANCE ((DIAMETRE / 2.0) * (PI / 2.0))
 #define TURNING_SPEED 4000
 #define SRAIGHT_SPEED 8000
