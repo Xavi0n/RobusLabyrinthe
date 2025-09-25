@@ -17,6 +17,8 @@ void initPID();
 void setPIDDesiredPulse(int, int);
 void runPIDController();
 float getCoveredDistance();
+float getRightWheelCoveredDistance();
+float getLeftWheelCoveredDistance();
 void resetCoveredDistance();
 float constrainFloat(float, float, float);
 #endif
