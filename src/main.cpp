@@ -1,35 +1,87 @@
 #include <Arduino.h>
 #include <LibRobus.h>
-#include "main.h"
-#include "Circuit.h"
-#include "DetectionState.h"
 
-#define IR_GREEN_PIN 2
-#define IR_RED_PIN 3
+#define LEFT_MOTOR_ID 0
+#define RIGHT_MOTOR_ID 1
+#define PULSE_PER_TURN 3200
 
-volatile bool isGreenLedOn, isRedLedOn;
-
-void irGreenLed(){
-  isGreenLedOn = !digitalRead(IR_GREEN_PIN);
-}
-
-void irRedLed(){
-  isRedLedOn = !digitalRead(IR_RED_PIN);
-}
+unsigned long previousTime;
+int lastLeftMotorError = 0;
+int lastRightMotorError = 0;
+int iLeftMotorError = 0;
+int iRightMotorError = 0;
+const double kp = 2;
+const double ki = 5;
+const double kd = 1;
 
 void setup() {
-  pinMode(IR_GREEN_PIN, INPUT_PULLUP);
-  pinMode(IR_RED_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(IR_GREEN_PIN), irGreenLed, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(IR_RED_PIN), irRedLed, CHANGE);
+  
   Serial.begin(9600);
 }
 
 void loop() {
-  DetectionState detectionState = getDetection(isGreenLedOn, isRedLedOn);
+  unsigned long currentTime = millis();
+  unsigned long elapsedTime = currentTime - previousTime;
+  int calculatedPulse = (PULSE_PER_TURN/elapsedTime);
 
-  Serial.print("Détection:");
-  Serial.println(detectionState);
+  int leftMotorPulse = ENCODER_Read(LEFT_MOTOR_ID);
+  int rightMotorPulse = ENCODER_Read(RIGHT_MOTOR_ID);
 
-  delay(1000);
+  //P
+  int leftMotorError = calculatedPulse - leftMotorPulse;
+  int rightMotorError = calculatedPulse - rightMotorPulse;
+
+  //I
+  iLeftMotorError += leftMotorError * elapsedTime;
+  iRightMotorError += rightMotorError * elapsedTime;
+
+  //D
+  int dLeftMotorError = (leftMotorError - lastLeftMotorError)/elapsedTime;
+  int dRightMotorError = (rightMotorError - lastRightMotorError)/elapsedTime;
+
+  // calcul
+  double outLeftMotor = kp*leftMotorError + ki*iLeftMotorError + kd*dLeftMotorError;
+  double outRightMotor = kp*rightMotorError + ki*iRightMotorError + kd*dRightMotorError;
+
+  lastLeftMotorError = leftMotorError;
+  previousTime = currentTime;
+
+  MOTOR_SetSpeed(LEFT_MOTOR_ID, 0.1);
+  MOTOR_SetSpeed(RIGHT_MOTOR_ID, 0.1);
+
+  Serial.print(">");
+
+  Serial.print("PLeft:");
+  Serial.print(leftMotorError);
+  Serial.print(",");
+
+  Serial.print("ILeft:");
+  Serial.print(iLeftMotorError);
+  Serial.print(",");
+
+  Serial.print("DLeft:");
+  Serial.print(dLeftMotorError);
+  Serial.print(",");
+
+  Serial.print("outLeft:");
+  Serial.print(outLeftMotor);
+  Serial.print(",");
+
+  Serial.print("PRight:");
+  Serial.print(leftMotorError);
+  Serial.print(",");
+
+  Serial.print("IRight:");
+  Serial.print(iLeftMotorError);
+  Serial.print(",");
+
+  Serial.print("DRight:");
+  Serial.print(dLeftMotorError);
+  Serial.print(",");
+
+  Serial.print("outRight:");
+  Serial.print(outLeftMotor);
+  Serial.println();
+
+  delay(50);
 }

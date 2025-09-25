@@ -1,8 +1,6 @@
 #include <Arduino.h>
 #include <LibRobus.h>
 #include "Circuit.h"
-#include "main.h"
-
 
 unsigned char ucRobotDirection = NORTH;
 unsigned char ucWhereIsRobotX = 0;              // Represents the robot's current X

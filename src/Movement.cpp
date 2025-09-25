@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <LibRobus.h>
-#include "main.h"
 #include "Circuit.h"
 #include "DetectionState.h"
 
