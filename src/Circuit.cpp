@@ -1,4 +1,6 @@
 #include "Circuit.h"
+#include "main.h"
+
 
 unsigned char ucRobotDirection = NORTH;
 unsigned char ucWhereIsRobotX = 0;              // Represents the robot's current X
@@ -10,18 +12,29 @@ unsigned char ucWhereIsRobotY = CENTER_COLUMN;  // Represents the robot's curren
 // 1 means line present, 0 means no line. Each element of the table represents the edge
 // of a 50x50 cm square in the maze.
 // The first line of the table represents the start line of the maze, which means maze is flipped in the table vs reality.
-unsigned char uctWhereAreLines [11][4] = {
-  {0,0,0,0},
-  {0,0,0,0},
-  {0,0,0,0},
-  {0,0,0,0},
-  {0,0,0,0},
-  {0,0,0,0},
-  {0,0,0,0},
-  {0,0,0,0},
-  {0,0,0,0},
-  {0,0,0,0},
-  {0,0,0,0}
+unsigned char uctWhereAreLines [22][7] = {
+  {1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,1,0,1,0,1},
+  {1,1,1,1,1,1,1}
 };
 
 void vUpdateRobotDirection(unsigned char ucTurnDirection)
@@ -53,19 +66,20 @@ void vUpdateRobotDirection(unsigned char ucTurnDirection)
 
 void vUpdateRobotPosition()
 {
+    //Coordinates increment/decrement by 2 since the position represents the square between edges
     switch (ucRobotDirection)
     {
         case NORTH:
-            ucWhereIsRobotY++;
+            ucWhereIsRobotY = ucWhereIsRobotY + 2;
             break;
         case EAST:
-            ucWhereIsRobotX++;
+            ucWhereIsRobotX = ucWhereIsRobotX + 2;  //Add 2 since the position represents the square between edges
             break;
         case SOUTH:
-            ucWhereIsRobotY--;
+            ucWhereIsRobotY = ucWhereIsRobotY - 2;
             break;
         case WEST:
-            ucWhereIsRobotX--;
+            ucWhereIsRobotX = ucWhereIsRobotX - 2;  //Add 2 since the position represents the square between edges
             break;
     }
 }
@@ -75,32 +89,34 @@ bool bGetNearbyLines(unsigned char ucRobotDirection, unsigned char ucWhereIsRobo
     bool bLineInFront = false;
     switch (ucRobotDirection)
     {
+        //NORTH and WEST add 1 to their position since they are facing down or right in the table
+        //SOUTH and EAST check the line at their current position since they are facing up or left in the table
         case NORTH:
-            if (uctWhereAreLines[ucWhereIsRobotY + 1][ucWhereIsRobotX] == 1)//Add 1 since the position represents the square between edges
-            {
+            if (uctWhereAreLines[ucWhereIsRobotY + 1][ucWhereIsRobotX] == 1)
+            {                                                               
                 Serial.println("Line in front");
                 bLineInFront = true;
             }
             break;
 
         case EAST:
-            if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX + 1] == 1)//Add 1 since the position represents the square between edges
-            {
+            if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX] == 1)
+            {                                                               
                 Serial.println("Line in front");
                 bLineInFront = true;
             }
             break;
 
         case SOUTH:
-            if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX] == 1)//No need to subtract 1 since the position represents the square between edges
-            {
+            if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX] == 1)
+            {                                                           
                 Serial.println("Line in front");
                 bLineInFront = true;
             }
             break;
 
         case WEST:
-            if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX] == 1)//No need to subtract 1 since the position represents the square between edges
+            if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX + 1] == 1)
             {
                 Serial.println("Line in front");
                 bLineInFront = true;
