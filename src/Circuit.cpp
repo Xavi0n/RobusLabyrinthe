@@ -1,15 +1,39 @@
-#include <Arduino.h>
-#include <LibRobus.h>
 #include "Circuit.h"
-#include "main.h"
-#include "Movement.h"
-
 
 unsigned char ucRobotDirection = NORTH;
 unsigned char ucWhereIsRobotX = 0;              // Represents the robot's current X
 unsigned char ucWhereIsRobotY = CENTER_COLUMN;  // Represents the robot's current Y position with respect to the table
                                                 // If the value of a variable is 2, the robot is between edges 2 and 3
 //Function to update the robot direction based on the turn direction (LEFT or RIGHT)
+
+
+// 1 means line present, 0 means no line. Each element of the table represents the edge
+// of a 50x50 cm square in the maze.
+// The first line of the table represents the start line of the maze, which means maze is flipped in the table vs reality.
+unsigned char uctWhereAreLines [22][7] = {
+  {1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1},
+  {1,0,1,0,1,0,1},
+  {1,0,1,0,1,0,1},
+  {1,1,1,1,1,1,1}
+};
 
 void vUpdateRobotDirection(unsigned char ucTurnDirection)
 {

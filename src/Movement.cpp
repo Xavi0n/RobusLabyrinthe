@@ -1,13 +1,8 @@
-#include <Arduino.h>
-#include <LibRobus.h>
-#include "main.h"
-#include "Circuit.h"
-#include "DetectionState.h"
 #include "Movement.h"
 
-void moveforward(){
+void moveForward(){
     if(bDangerCheck() == false){
-        vUpdateRobotPosition();
+        //vUpdateRobotPosition();
         //move forward one unit (50cm) using PID
     }
     else {
