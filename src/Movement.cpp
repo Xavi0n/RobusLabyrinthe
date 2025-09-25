@@ -7,12 +7,11 @@
 void moveforward(){
     if(bDangerCheck() == false){
         vUpdateRobotPosition();
+        //move forward one unit (50cm) using PID
     }
     else {
     //[ADD WHAT WE WANT IT TO DO HERE]
     }
-   
-    //move forward one unit (50cm) using PID
 }
 
 void turnRight(){

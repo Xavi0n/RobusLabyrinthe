@@ -1,0 +1,85 @@
+Voici le pseudocode pour le défi du parcours de l'équipe Eradication-P07:
+
+************Circuit.cpp:
+code d'orientation(){
+    si robot tourne à droite{
+        Direction change dans cet ordre: Nord -> Est -> Sud -> Ouest -> Nord 
+    }
+    si robot tourne à droite{
+        Direction change dans cet ordre: Nord -> Ouest -> Sud -> Est -> Nord
+    }
+}
+
+code de position(){
+    si direction est Nord{
+        PositionY augmente de 1
+    }
+    si direction est Sud{
+        PositionY baisse de 1
+    }
+    si direction est Est{
+        PositionX augmente de 1
+    }
+    si direction est Ouest{
+        PositionX baisse de 1
+    }
+}
+
+Vérificateur de lignes(){
+    Si il y a une ligne à côté du robot, dans le sens de sa direction, il averti le vérificateur d'obstacle
+}
+
+Vérificateur d'obstacle(){
+    si il y a une ligne ou un mur devant le robot (selon Vérificateur de lignes() ou capteur de proximité)
+    {
+        averti les fonctions de mouvements, et empêche le robot d'avancer ou de rester face à un obstacle
+    }
+}
+
+***********Circuit.h:
+Contient un tableau dans lequel sont identifié les endroits où il y a des lignes, afin que le robot puisse les éviter.
+
+
+***********DetectionState.cpp:
+vérifie si le capteur de proximité detecte quelque chose, et avertie le vérificateur d'obstacle
+
+************main.cpp:
+-> fait le setup
+-> fait la loop du programme
+
+
+************Movements.cpp:
+avance(){
+    vérifie qu'il n'y a pas de mur devant{
+        avance de 1 carré (50cm) à l'aide du PID
+        averti au code de position que le robot est avancé de 1 carré dans la direction qu'il était orienté
+    }
+    sinon{
+        tourner à droite (si il y a un mur à droite, il fera un 180 deg et sera vers la gauche)
+    }
+}
+
+tourne à drote(){
+    
+    tourne à droite en utilisant le PID:
+        avance un peu (pour que le point de rotation soit au centre)
+        arrête
+        avance roue gauche et recule roue droite jusqu'à ce que le robot ait tourné de 90 deg
+        recule un peu (pour que le robot soit centré avec la 'case')
+
+    dit au code d'orientation que le robot est tourné vers la droite
+
+    si on détecte un mur devant
+    {
+        tourne de 180 deg
+    }
+}
+
+tourne à gauche(){
+    même chose que tourne à droite mais les roues tournent dans l'autre direction
+}
+
+demi tour()
+{
+    fait le même processus que tourner à droite, mais le fait pour 180 deg
+}
