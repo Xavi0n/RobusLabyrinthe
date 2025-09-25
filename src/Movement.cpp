@@ -20,7 +20,7 @@ void moveForward(){
 
 void turnRight(){
     currentMove = MoveEnum::TURN_RIGHT;
-    setPIDDesiredPulse(TURNING_SPEED, TURNING_SPEED);
+    setPIDDesiredPulse(-TURNING_SPEED, TURNING_SPEED);
     //turn right using PID:
         //reverse a bit (so rotation point is in the middle)
         //stop
@@ -59,10 +59,14 @@ void uTurn(){
 void stop(){
     setPIDDesiredPulse(0, 0);
     currentMove = MoveEnum::TURN_RIGHT;
+    resetCoveredDistance();
 }
 
 void runMovementController(){
     // Test if the move is done
+    Serial.print(">GetRightWheelCoveredDistance:");
+    Serial.print(getRightWheelCoveredDistance());
+    Serial.println();
     switch(currentMove){
         case MoveEnum::TURN_RIGHT: {
             if(getRightWheelCoveredDistance() >= QUARTER_TURN_DISTANCE){

@@ -113,13 +113,13 @@ float getCoveredDistance(){
 }
 
 float getRightWheelCoveredDistance(){
-    float distanceEnPouce = rightMotorTotalPulse / PULSE_PER_TURN * ROUE_DIAMETRE;
+    float distanceEnPouce = (float)rightMotorTotalPulse / PULSE_PER_TURN * ROUE_DIAMETRE;
     float distance = distanceEnPouce * POUCE_TO_CM;
     return distance;
 }
 
 float getLeftWheelCoveredDistance(){
-    float distanceEnPouce = leftMotorTotalPulse / PULSE_PER_TURN * ROUE_DIAMETRE;
+    float distanceEnPouce = (float)leftMotorTotalPulse / PULSE_PER_TURN * ROUE_DIAMETRE;
     float distance = distanceEnPouce * POUCE_TO_CM;
     return distance;
 }

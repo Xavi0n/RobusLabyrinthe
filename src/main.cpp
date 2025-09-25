@@ -37,10 +37,6 @@ void loop() {
     if(getCurrentMove() != MoveEnum::NONE){
         runMovementController();
     }
-    
-    /*if(getCoveredDistance() >= 50){
-        setPIDDesiredPulse(0, 0);
-    }*/
 
-    delay(20);
+    delay(50);
 }
