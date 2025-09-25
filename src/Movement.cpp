@@ -26,7 +26,7 @@ void turnRight(){
     vUpdateRobotDirection(RIGHT);
     if(bDangerCheck() == true)
     {
-        //do a full u turn
+        uTurn();
     }
 }
 
@@ -42,9 +42,11 @@ void turnLeft(){
     if(bDangerCheck() == true)
     {
         //do a full u turn
+        uTurn();
     }
 }
 
 void uTurn(){
-    
+    //be careful about using the turn commands to make it do a u turn, 
+    //cuz it might trigger the danger check and make it do more than a 180 
 }
