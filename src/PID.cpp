@@ -1,5 +1,15 @@
 #include "PID.h"
 
+unsigned long previousTime = 0;
+int leftMotorDesiredPulse = 0;
+int rightMotorDesiredPulse = 0;
+int leftMotorTotalPulse = 0;
+int rightMotorTotalPulse = 0;
+float lastLeftMotorError = 0;
+float lastRightMotorError = 0;
+float iLeftMotorError = 0;
+float iRightMotorError = 0;
+
 float constrainFloat(float value, float min_val, float max_val) {
     if (value < min_val) return min_val;
     if (value > max_val) return max_val;
