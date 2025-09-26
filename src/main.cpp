@@ -5,8 +5,8 @@
 #include "Movement.h"
 #include "PID.h"
 
-#define IR_GREEN_PIN 2
-#define IR_RED_PIN 3
+constexpr int IR_GREEN_PIN = 2;
+constexpr int IR_RED_PIN = 3;
 
 volatile bool isGreenLedOn, isRedLedOn;
 
@@ -25,7 +25,7 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(IR_GREEN_PIN), irGreenLed, CHANGE);
     attachInterrupt(digitalPinToInterrupt(IR_RED_PIN), irRedLed, CHANGE);
     Serial.begin(115200);
-    turnRight();
+    Movement::turnRight();
 }
 
 void loop() {
@@ -34,8 +34,8 @@ void loop() {
     Serial.print("Détection:");
     Serial.println(detectionState);
 
-    if(getCurrentMove() != MoveEnum::NONE){
-        runMovementController();
+    if(Movement::getCurrentMove() != Movement::MoveEnum::NONE){
+        Movement::runMovementController();
     }
 
     delay(50);
