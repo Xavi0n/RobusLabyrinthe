@@ -38,11 +38,13 @@ namespace PID{
         
         float leftMotorCalculatedPulse = (abs(leftDesiredPulse) * elapsedTimeSec);
         float rightMotorCalculatedPulse = (abs(rightDesiredPulse) * elapsedTimeSec);
-        int leftMotorPulse = abs(ENCODER_ReadReset(LEFT));
-        int rightMotorPulse = abs(ENCODER_ReadReset(RIGHT));
+        int rawLeftMotorPulse = ENCODER_ReadReset(LEFT);
+        int rawRightMotorPulse = ENCODER_ReadReset(RIGHT);
+        int rightMotorPulse = abs(rawRightMotorPulse);
+        int leftMotorPulse = abs(rawLeftMotorPulse);
         
-        leftTotalPulse += leftMotorPulse;
-        rightTotalPulse += rightMotorPulse;
+        leftTotalPulse += rawLeftMotorPulse;
+        rightTotalPulse += rawRightMotorPulse;
 
         // P
         float leftMotorError = leftMotorCalculatedPulse - leftMotorPulse;
@@ -82,30 +84,22 @@ namespace PID{
         previousTime = currentTime;
 
         // Debug
-        #ifdef DEBUG
         Serial.print(">");
+        Serial.print("rawRight:");
+        Serial.print(rawRightMotorPulse);
+        Serial.print(",");
+        Serial.print("right:");
+        Serial.print(rightMotorPulse);
+        Serial.print(",");
         Serial.print("TotalLeftPulse:");
         Serial.print(leftTotalPulse);
         Serial.print(",");
         Serial.print("TotalRightPulse:");
         Serial.print(rightTotalPulse);
         Serial.print(",");
-        Serial.print("PLeft:");
-        Serial.print(leftMotorError);
-        Serial.print(",");
-        Serial.print("ILeft:");
-        Serial.print(iLeftError);
-        Serial.print(",");
-        Serial.print("DLeft:");
-        Serial.print(dLeftMotorError);
-        Serial.print(",");
-        Serial.print("outLeft:");
-        Serial.print(outLeftMotor);
-        Serial.print(",");
-        Serial.print("outRight:");
-        Serial.print(outRightMotor);
+        Serial.print("getRightCoveredDistance:");
+        Serial.print(getRightCoveredDistance());
         Serial.println();
-        #endif
     }
 
     // Retourne la distance en cm
@@ -116,14 +110,13 @@ namespace PID{
         return distance;
     }
 
-    float getRightCoveredDistance(){
-        float distanceEnPouce = (float)rightTotalPulse / PULSE_PER_TURN * ROUE_DIAMETRE;
-        float distance = distanceEnPouce * POUCE_TO_CM;
-        return distance;
+    float getRightCoveredDistance() {
+        float distance_cm = abs(rightTotalPulse) / PULSE_PER_TURN * (PI * ROUE_DIAMETRE) * POUCE_TO_CM;
+        return distance_cm;
     }
 
     float getLeftCoveredDistance(){
-        float distanceEnPouce = (float)leftTotalPulse / PULSE_PER_TURN * ROUE_DIAMETRE;
+        float distanceEnPouce = abs(leftTotalPulse) / PULSE_PER_TURN * ROUE_DIAMETRE;
         float distance = distanceEnPouce * POUCE_TO_CM;
         return distance;
     }

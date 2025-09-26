@@ -32,7 +32,7 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(IR_GREEN_PIN), irGreenLed, CHANGE);
     attachInterrupt(digitalPinToInterrupt(IR_RED_PIN), irRedLed, CHANGE);
     Serial.begin(115200);
-    Movement::turnRight();
+    Movement::initMovement();
 }
 
 void loop() {
@@ -45,6 +45,7 @@ void loop() {
             exit();
         }
         */
+
         if (!Circuit::bDangerCheck() && !getIRDetection()) {
             Movement::moveForward();
         } else {
@@ -57,7 +58,7 @@ void loop() {
         }
     }
 
-    delay(50);
+    delay(5);
 }
 
 //-----------------------------

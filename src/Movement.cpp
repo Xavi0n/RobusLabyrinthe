@@ -38,23 +38,32 @@ namespace Movement {
     void runMovementController(){
         switch(currentMove){
             case MoveEnum::TURN_RIGHT: {
-                if(PID::getRightCoveredDistance() >= QUARTER_TURN_DISTANCE) stop();
-                Circuit::vUpdateRobotDirection(RIGHT);
+                if(PID::getRightCoveredDistance() >= 14.92f){
+                    stop();
+                    Circuit::vUpdateRobotDirection(RIGHT);
+                }
                 break;
             }
             case MoveEnum::TURN_LEFT: {
-                if(PID::getRightCoveredDistance() >= QUARTER_TURN_DISTANCE) stop();
-                Circuit::vUpdateRobotDirection(LEFT);
+                if(PID::getRightCoveredDistance() >= 14.92f){
+                    stop();
+                    Circuit::vUpdateRobotDirection(LEFT);
+                }
                 break;
             }
             case MoveEnum::FORWARD: {
-                if(PID::getCoveredDistance() >= FORWARD_DISTANCE) stop();
+                if(PID::getCoveredDistance() >= FORWARD_DISTANCE){
+                    stop();
+                    Circuit::vUpdateRobotPosition();
+                }
                 break;
             }
             case MoveEnum::UTURN: {
-                if(PID::getRightCoveredDistance() >= QUARTER_TURN_DISTANCE*2) stop();
-                Circuit::vUpdateRobotDirection(RIGHT);
-                Circuit::vUpdateRobotDirection(RIGHT);
+                if(PID::getRightCoveredDistance() >= 0.1492f*2){
+                    stop();
+                    Circuit::vUpdateRobotDirection(RIGHT);
+                    Circuit::vUpdateRobotDirection(RIGHT);
+                }
                 break;
             }
             default: {
