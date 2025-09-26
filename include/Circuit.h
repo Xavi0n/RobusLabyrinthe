@@ -18,10 +18,13 @@
 #define CENTER_COLUMN 3
 #define RIGHT_COLUMN 1
 
-//FUNCTION PROTOTYPES
-void vUpdateRobotDirection(unsigned char ucTurnDirection);
-void vUpdateRobotPosition();
-bool bGetNearbyLines(unsigned char ucRobotDirection, unsigned char ucWhereIsRobotX, unsigned char ucWhereIsRobotY);
-bool bDangerCheck ();
+namespace Circuit {
+    //FUNCTION PROTOTYPES
+    void vUpdateRobotDirection(unsigned char ucTurnDirection);
+    void vUpdateRobotPosition();
+    bool bGetNearbyLines(unsigned char ucRobotDirection, unsigned char ucWhereIsRobotX, unsigned char ucWhereIsRobotY);
+    bool bDangerCheck ();
+    int iGetUcRobotDirection();
+}
 
 #endif // CIRCUIT_H

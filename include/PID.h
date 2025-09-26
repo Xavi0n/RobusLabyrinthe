@@ -17,8 +17,8 @@ namespace PID{
     void setPIDDesiredPulse(int, int);
     void runPIDController();
     float getCoveredDistance();
-    float getRightWheelCoveredDistance();
-    float getLeftWheelCoveredDistance();
+    float getRightCoveredDistance();
+    float getLeftCoveredDistance();
     void resetCoveredDistance();
 }
 #endif
