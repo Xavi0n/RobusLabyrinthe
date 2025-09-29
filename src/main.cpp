@@ -44,6 +44,7 @@ void loop() {
         if(bGetIsFinished()){
             exit();
         }
+        /*if (!Circuit::bDang
         */
 
         if (!Circuit::bDangerCheck() && !getIRDetection()) {

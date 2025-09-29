@@ -59,7 +59,7 @@ namespace Movement {
                 break;
             }
             case MoveEnum::UTURN: {
-                if(PID::getRightCoveredDistance() >= 0.1492f*2){
+                if(PID::getRightCoveredDistance() >= 14.92f*2){
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
                     Circuit::vUpdateRobotDirection(RIGHT);
