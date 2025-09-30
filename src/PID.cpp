@@ -84,6 +84,7 @@ namespace PID{
         previousTime = currentTime;
 
         // Debug
+        /*
         Serial.print(">");
         Serial.print("rawRight:");
         Serial.print(rawRightMotorPulse);
@@ -99,15 +100,14 @@ namespace PID{
         Serial.print(",");
         Serial.print("getRightCoveredDistance:");
         Serial.print(getRightCoveredDistance());
-        Serial.println();
+        Serial.println();*/
     }
 
     // Retourne la distance en cm
     float getCoveredDistance(){
         float combinedAveragePulse = (leftTotalPulse + rightTotalPulse) / 2;
-        float distanceEnPouce = combinedAveragePulse / PULSE_PER_TURN * ROUE_DIAMETRE;
-        float distance = distanceEnPouce * POUCE_TO_CM;
-        return distance;
+        float distance_cm = abs(combinedAveragePulse) / PULSE_PER_TURN * (PI * ROUE_DIAMETRE) * POUCE_TO_CM;
+        return distance_cm;
     }
 
     float getRightCoveredDistance() {

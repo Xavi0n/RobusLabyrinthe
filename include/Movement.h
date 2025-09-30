@@ -8,8 +8,9 @@
 #include "PID.h"
 
 namespace Movement {
-    constexpr float FORWARD_DISTANCE = 0.5;
-    constexpr int TURNING_SPEED = 4000;
+    constexpr float FORWARD_DISTANCE = 50;
+    constexpr float TURN_DISTANCE = 14.92f;
+    constexpr int TURNING_SPEED = 4500;
     constexpr int STRAIGHT_SPEED = 8000;
 
     enum MoveEnum { FORWARD, TURN_LEFT, TURN_RIGHT, UTURN, NONE };
@@ -22,6 +23,8 @@ namespace Movement {
     void uTurn();
     void stop();
     void runMovementController();
+    void endMove();
+    void stopCheck();
     MoveEnum getCurrentMove();
 }
 #endif

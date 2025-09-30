@@ -4,23 +4,13 @@
 #include "Movement.h"
 #include "PID.h"
 
-constexpr int IR_GREEN_PIN = 2;
-constexpr int IR_RED_PIN = 3;
-
-volatile bool isGreenLedOn, isRedLedOn;
+constexpr int IR_GREEN_PIN = 48;
+constexpr int IR_RED_PIN = 49;
+constexpr int LED_THRESHOLD = 650;
+bool invalidLastCheck = false;
 
 bool getIRDetection();
-
-//-----------------------------
-// INTERUPTS
-//-----------------------------
-void irGreenLed(){
-    isGreenLedOn = !digitalRead(IR_GREEN_PIN);
-}
-
-void irRedLed(){
-    isRedLedOn = !digitalRead(IR_RED_PIN);
-}
+void printDirection();
 
 //-----------------------------
 // MAIN CODE
@@ -29,42 +19,70 @@ void setup() {
     BoardInit();
     pinMode(IR_GREEN_PIN, INPUT_PULLUP);
     pinMode(IR_RED_PIN, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(IR_GREEN_PIN), irGreenLed, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(IR_RED_PIN), irRedLed, CHANGE);
     Serial.begin(115200);
     Movement::initMovement();
+    
 }
 
 void loop() {
+    //printDirection();
+    
     if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
         Movement::runMovementController();
     } else {
-        // TODO
-        /*
-        if(bGetIsFinished()){
-            exit();
-        }
-        /*if (!Circuit::bDang
-        */
-
-        if (!Circuit::bDangerCheck() && !getIRDetection()) {
+        // TODO get is finished
+        if (!getIRDetection()) {
+            invalidLastCheck = false;
             Movement::moveForward();
         } else {
-            int robotDirection = Circuit::iGetUcRobotDirection();
-            if (robotDirection == WEST || robotDirection == EAST) {
-                Movement::uTurn();
-            } else {
-                Movement::turnRight();
-            }
+            Movement::turnRight();
         }
     }
 
+    /*if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
+        Movement::runMovementController();
+    } else {
+        // TODO get is finished
+        if (!getIRDetection()) {
+            invalidLastCheck = false;
+            Movement::moveForward();
+        } else {
+            if (invalidLastCheck == true) {
+                Movement::uTurn();
+            } else {
+                Movement::turnRight();
+                invalidLastCheck = true;
+            }
+        }
+    }*/
+ 
     delay(5);
 }
 
 //-----------------------------
 // FUNCTIONS
 //-----------------------------
+void printDirection(){
+    switch (Circuit::iGetUcRobotDirection()) {
+        case NORTH:
+            Serial.println("North");
+            break;
+        case EAST:
+            Serial.println("East");
+            break;
+        case SOUTH:
+            Serial.println("South");
+            break;
+        case WEST:
+            Serial.println("West");
+            break;
+        default:
+            Serial.println("Unknown Direction");
+            break;
+    }
+}
 bool getIRDetection(){
+    int isGreenLedOn = analogRead(A0) < LED_THRESHOLD;
+    int isRedLedOn = analogRead(A1) < LED_THRESHOLD;
     return isGreenLedOn && isRedLedOn;
 }

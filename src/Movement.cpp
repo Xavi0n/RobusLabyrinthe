@@ -2,11 +2,13 @@
 
 namespace Movement {
     MoveEnum currentMove;
+    MoveEnum lastMove;
 
     void initMovement(){
         PID::initPID();
         PID::setPIDDesiredPulse(0, 0);
         currentMove = MoveEnum::NONE;
+        lastMove = MoveEnum::NONE;
     }
 
     void moveForward(){
@@ -31,6 +33,11 @@ namespace Movement {
 
     void stop(){
         PID::setPIDDesiredPulse(0, 0);
+        endMove();
+    }
+
+    void endMove(){
+        lastMove = currentMove;
         currentMove = MoveEnum::NONE;
         PID::resetCoveredDistance();
     }
@@ -38,14 +45,14 @@ namespace Movement {
     void runMovementController(){
         switch(currentMove){
             case MoveEnum::TURN_RIGHT: {
-                if(PID::getRightCoveredDistance() >= 14.92f){
+                if(PID::getRightCoveredDistance() >= TURN_DISTANCE){
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
                 }
                 break;
             }
             case MoveEnum::TURN_LEFT: {
-                if(PID::getRightCoveredDistance() >= 14.92f){
+                if(PID::getRightCoveredDistance() >= TURN_DISTANCE){
                     stop();
                     Circuit::vUpdateRobotDirection(LEFT);
                 }
@@ -53,13 +60,13 @@ namespace Movement {
             }
             case MoveEnum::FORWARD: {
                 if(PID::getCoveredDistance() >= FORWARD_DISTANCE){
-                    stop();
+                    endMove();
                     Circuit::vUpdateRobotPosition();
                 }
                 break;
             }
             case MoveEnum::UTURN: {
-                if(PID::getRightCoveredDistance() >= 14.92f*2){
+                if(PID::getRightCoveredDistance() >= TURN_DISTANCE*2){
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
                     Circuit::vUpdateRobotDirection(RIGHT);
