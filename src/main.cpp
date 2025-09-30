@@ -30,13 +30,8 @@ void loop() {
     if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
         Movement::runMovementController();
     } else {
-        // TODO get is finished
-        if (!getIRDetection()) {
-            invalidLastCheck = false;
-            Movement::moveForward();
-        } else {
-            Movement::turnRight();
-        }
+        Movement::turnRight();
+        delay(3000);
     }
 
     /*if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
