@@ -9,7 +9,8 @@
 
 namespace Movement {
     constexpr float FORWARD_DISTANCE = 50;
-    constexpr float TURN_DISTANCE = 14.92f;
+    //constexpr float TURN_DISTANCE = 14.92f;
+    constexpr float TURN_DISTANCE = 14.50f;
     constexpr int TURNING_SPEED = 4500;
     constexpr int STRAIGHT_SPEED = 8000;
 

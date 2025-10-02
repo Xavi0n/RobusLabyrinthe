@@ -103,6 +103,13 @@ namespace PID{
         Serial.println();*/
     }
 
+    void reset(){
+        lastLeftError = 0;
+        lastRightError = 0;
+        iLeftError = 0;
+        iRightError = 0;
+    }
+
     // Retourne la distance en cm
     float getCoveredDistance(){
         float combinedAveragePulse = (leftTotalPulse + rightTotalPulse) / 2;

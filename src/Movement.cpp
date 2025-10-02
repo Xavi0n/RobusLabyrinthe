@@ -33,6 +33,7 @@ namespace Movement {
 
     void stop(){
         PID::setPIDDesiredPulse(0, 0);
+        PID::reset();
         endMove();
     }
 
