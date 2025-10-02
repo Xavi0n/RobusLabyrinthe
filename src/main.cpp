@@ -20,7 +20,7 @@ void resetTimer();
 void whistleDetection();
 
 //-----------------------------
-// MAIN CODE
+// MAIN CODE.
 //-----------------------------
 void setup() {
     BoardInit();
@@ -42,11 +42,14 @@ void loop() {
     } else if(invalidLastCheck) {
         Movement::uTurn();
     } else {
-        if(Circuit::vUpdateRobotDirection(RIGHT) && !Circuit::bDangerCheck()){
+        Circuit::vUpdateRobotDirection(RIGHT);
+        if(!Circuit::bDangerCheck()){
             Movement::turnRight();
+            invalidLastCheck = true;
+        }else {
+            Movement::turnLeft();
         }
         Circuit::vUpdateRobotDirection(LEFT);
-        invalidLastCheck = true;
     }
  
     delay(5);
