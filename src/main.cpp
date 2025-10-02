@@ -11,6 +11,7 @@ unsigned long startMillis = 0;
 Movement::MoveEnum lastMove = Movement::MoveEnum::NONE;
 //ADJUST THIS VALUE LATER, BECAUSE I DON'T KNOW HOW HIGH OR HOW LOW IT NEEDS TO BE!!!!!
 constexpr int WHISTLE_THRESHOLD = 1;
+bool isWhistleBlown = false;
 bool invalidLastCheck = false;
 
 bool getIRDetection();
@@ -31,7 +32,28 @@ void setup() {
     
 }
 
+//This functions needs to be above loop() for it to be called
+void whistleDetection(){
+    bool whistleLoopEnd = false;
+    while(whistleLoopEnd == false)
+    {
+        //Make sure to connect whistle detector's out to pin A2
+        if(analogRead(A2) > WHISTLE_THRESHOLD)
+        {
+            whistleLoopEnd = true;
+            isWhistleBlown = true;
+        }
+    }
+}
+
 void loop() {
+    
+    //uncomment once this part is ready to be used
+    /*if(isWhistleBlown == false)
+    {
+        whistleDetection();
+    }*/
+
     //printDirection();
     Movement::MoveEnum currentMove = Movement::getCurrentMove();
     if (lastMove != currentMove) {
@@ -43,7 +65,7 @@ void loop() {
     }
 
     if(isTimePast(5)){
-        Movement::forward();
+        //Movement::forward();
     }
 
     Movement::runMovementController();
@@ -102,18 +124,4 @@ bool getIRDetection(){
     int isGreenLedOn = analogRead(A0) < LED_THRESHOLD;
     int isRedLedOn = analogRead(A1) < LED_THRESHOLD;
     return isGreenLedOn && isRedLedOn;
-}
-
-void whistle(){
-    bool whistleCheck = 0;
-    while(whistleCheck == false)
-    {
-        //MAKE SURE YOU CAN USE THIS PIN!!!!  --> Looks like yes?
-        if(analogRead(A2) > WHISTLE_THRESHOLD)
-        {
-            whistleCheck = true;
-            //add the next part for it to actually have an impact and trigger the code
-        }
-    }
-
 }
