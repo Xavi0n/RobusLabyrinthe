@@ -85,7 +85,7 @@ namespace Movement {
             }
             case MoveEnum::UTURN: {
                 float remaining = TURN_DISTANCE * 2 - PID::getRightCoveredDistance();
-                if (remaining <= 0.1f) {
+                if (remaining <= 0.4f) {
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
                     Circuit::vUpdateRobotDirection(RIGHT);

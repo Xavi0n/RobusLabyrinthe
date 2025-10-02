@@ -30,8 +30,8 @@ void setup() {
 }
 
 void loop() {
-    //printDirection();
-    Movement::MoveEnum currentMove = Movement::getCurrentMove();
+    
+    /*Movement::MoveEnum currentMove = Movement::getCurrentMove();
     if (lastMove != currentMove) {
         if(currentMove == Movement::MoveEnum::NONE){
             resetTimer();
@@ -41,16 +41,18 @@ void loop() {
     }
 
     if(isTimePast(5)){
-        Movement::forward();
+        Movement::turnRight();
     }
 
-    Movement::runMovementController();
+    Movement::runMovementController();*/
 
-    /*if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
+    if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
         Movement::runMovementController();
     } else {
-        // TODO get is finished
-        if (!getIRDetection()) {
+        if(Circuit::bIsFinished()){
+            while(1){}
+        }
+        else if (!getIRDetection() && !Circuit::bDangerCheck()) {
             invalidLastCheck = false;
             Movement::moveForward();
         } else {
@@ -61,7 +63,7 @@ void loop() {
                 invalidLastCheck = true;
             }
         }
-    }*/
+    }
  
     delay(5);
 }
@@ -80,19 +82,19 @@ void resetTimer(){
 void printDirection(){
     switch (Circuit::iGetUcRobotDirection()) {
         case NORTH:
-            Serial.println("North");
+            Serial.println("Face: North");
             break;
         case EAST:
-            Serial.println("East");
+            Serial.println("Face: Est");
             break;
         case SOUTH:
-            Serial.println("South");
+            Serial.println("Face: Sud");
             break;
         case WEST:
-            Serial.println("West");
+            Serial.println("Face: Ouest");
             break;
         default:
-            Serial.println("Unknown Direction");
+            Serial.println("Facing: IDK");
             break;
     }
 }

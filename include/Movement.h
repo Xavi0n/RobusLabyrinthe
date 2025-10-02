@@ -8,15 +8,15 @@
 #include "PID.h"
 
 namespace Movement {
-    constexpr float FORWARD_DISTANCE = 50;
+    constexpr float FORWARD_DISTANCE = 51;
     //constexpr float TURN_DISTANCE = 14.92f;
-    constexpr float TURN_DISTANCE = 14.50f;
-    constexpr int MAX_TURNING_SPEED = 6000;
-    constexpr int MIN_TURNING_SPEED = 2000;
-    constexpr int MAX_STRAIGHT_SPEED = 8000;
-    constexpr int MIN_STRAIGHT_SPEED = 2000;
-    constexpr float DECEL_TURN_DISTANCE = 4.0f;
-    constexpr float DECEL_FORWARD_DISTANCE = 6.0f;
+    constexpr float TURN_DISTANCE = 14.60f;
+    constexpr int MAX_TURNING_SPEED = 5500;
+    constexpr int MIN_TURNING_SPEED = 1500;
+    constexpr int MAX_STRAIGHT_SPEED = 7000;
+    constexpr int MIN_STRAIGHT_SPEED = 1500;
+    constexpr float DECEL_TURN_DISTANCE = 5.0f;
+    constexpr float DECEL_FORWARD_DISTANCE = 10.0f;
 
     enum MoveEnum { FORWARD, TURN_LEFT, TURN_RIGHT, UTURN, NONE };
 

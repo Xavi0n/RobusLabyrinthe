@@ -2,8 +2,8 @@
 
 namespace Circuit{
     unsigned char ucRobotDirection = NORTH;
-    unsigned char ucWhereIsRobotX = 0;              // Represents the robot's current X
-    unsigned char ucWhereIsRobotY = CENTER_COLUMN;  // Represents the robot's current Y position with respect to the table
+    unsigned char ucWhereIsRobotX = CENTER_COLUMN;              // Represents the robot's current X
+    unsigned char ucWhereIsRobotY = 1;  // Represents the robot's current Y position with respect to the table
                                                     // If the value of a variable is 2, the robot is between edges 2 and 3
     //Function to update the robot direction based on the turn direction (LEFT or RIGHT)
 
@@ -103,7 +103,7 @@ namespace Circuit{
                 break;
 
             case EAST:
-                if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX] == 1)
+                if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX+1] == 1)
                 {                                                               
                     Serial.println("Line in front");
                     bLineInFront = true;
@@ -111,7 +111,7 @@ namespace Circuit{
                 break;
 
             case SOUTH:
-                if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX] == 1)
+                if (uctWhereAreLines[ucWhereIsRobotY-1][ucWhereIsRobotX] == 1)
                 {                                                           
                     Serial.println("Line in front");
                     bLineInFront = true;
@@ -119,7 +119,7 @@ namespace Circuit{
                 break;
 
             case WEST:
-                if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX + 1] == 1)
+                if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX - 1] == 1)
                 {
                     Serial.println("Line in front");
                     bLineInFront = true;
@@ -136,5 +136,7 @@ namespace Circuit{
         return bDangerFlag;
     }
 
-    // TODO Fonction si le parcour est fini
+    bool bIsFinished(){
+        return ucWhereIsRobotY >= 19;
+    }
 }
