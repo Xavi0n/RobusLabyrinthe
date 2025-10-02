@@ -92,6 +92,7 @@ void whistle(){
         if(analogRead(A2) > WHISTLE_THRESHOLD)
         {
             whistleCheck = true;
+            //add the next part for it to actually have an impact and trigger the code
         }
     }
 
