@@ -84,23 +84,24 @@ namespace PID{
         previousTime = currentTime;
 
         // Debug
-        /*
+        
         Serial.print(">");
-        Serial.print("rawRight:");
-        Serial.print(rawRightMotorPulse);
-        Serial.print(",");
-        Serial.print("right:");
-        Serial.print(rightMotorPulse);
-        Serial.print(",");
-        Serial.print("TotalLeftPulse:");
-        Serial.print(leftTotalPulse);
-        Serial.print(",");
         Serial.print("TotalRightPulse:");
         Serial.print(rightTotalPulse);
         Serial.print(",");
-        Serial.print("getRightCoveredDistance:");
+        Serial.print("RightCoveredDistance:");
         Serial.print(getRightCoveredDistance());
-        Serial.println();*/
+        Serial.print("DistanceToReach:");
+        Serial.print(14.5f);
+        Serial.print(",");
+        Serial.println();
+    }
+
+    void reset(){
+        lastLeftError = 0;
+        lastRightError = 0;
+        iLeftError = 0;
+        iRightError = 0;
     }
 
     // Retourne la distance en cm
