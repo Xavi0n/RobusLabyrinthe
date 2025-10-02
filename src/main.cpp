@@ -7,6 +7,8 @@
 constexpr int IR_GREEN_PIN = 48;
 constexpr int IR_RED_PIN = 49;
 constexpr int LED_THRESHOLD = 650;
+//ADJUST THIS VALUE LATER, BECAUSE I DON'T KNOW HOW HIGH OR HOW LOW IT NEEDS TO BE!!!!!
+constexpr int WHISTLE_THRESHOLD = 1;
 bool invalidLastCheck = false;
 
 bool getIRDetection();
@@ -80,4 +82,17 @@ bool getIRDetection(){
     int isGreenLedOn = analogRead(A0) < LED_THRESHOLD;
     int isRedLedOn = analogRead(A1) < LED_THRESHOLD;
     return isGreenLedOn && isRedLedOn;
+}
+
+void whistle(){
+    bool whistleCheck = 0;
+    while(whistleCheck == false)
+    {
+        //MAKE SURE YOU CAN USE THIS PIN!!!!  --> Looks like yes?
+        if(analogRead(A2) > WHISTLE_THRESHOLD)
+        {
+            whistleCheck = true;
+        }
+    }
+
 }
