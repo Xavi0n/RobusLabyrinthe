@@ -7,10 +7,14 @@
 constexpr int IR_GREEN_PIN = 48;
 constexpr int IR_RED_PIN = 49;
 constexpr int LED_THRESHOLD = 650;
+unsigned long startMillis = 0;
+Movement::MoveEnum lastMove = Movement::MoveEnum::NONE;
 bool invalidLastCheck = false;
 
 bool getIRDetection();
 void printDirection();
+bool isTimePast(int seconds);
+void resetTimer();
 
 //-----------------------------
 // MAIN CODE
@@ -20,19 +24,27 @@ void setup() {
     pinMode(IR_GREEN_PIN, INPUT_PULLUP);
     pinMode(IR_RED_PIN, INPUT_PULLUP);
     Serial.begin(115200);
+    startMillis = millis();
     Movement::initMovement();
     
 }
 
 void loop() {
     //printDirection();
-    
-    if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
-        Movement::runMovementController();
-    } else {
-        Movement::turnRight();
-        delay(3000);
+    Movement::MoveEnum currentMove = Movement::getCurrentMove();
+    if (lastMove != currentMove) {
+        if(currentMove == Movement::MoveEnum::NONE){
+            resetTimer();
+        }
+
+        lastMove = currentMove;
     }
+
+    if(isTimePast(5)){
+        Movement::forward();
+    }
+
+    Movement::runMovementController();
 
     /*if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
         Movement::runMovementController();
@@ -57,6 +69,14 @@ void loop() {
 //-----------------------------
 // FUNCTIONS
 //-----------------------------
+bool isTimePast(int seconds){
+    return millis() - startMillis >= (unsigned long)seconds * 1000;
+}
+
+void resetTimer(){
+    startMillis = millis();
+}
+
 void printDirection(){
     switch (Circuit::iGetUcRobotDirection()) {
         case NORTH:

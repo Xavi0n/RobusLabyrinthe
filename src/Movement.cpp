@@ -13,22 +13,18 @@ namespace Movement {
 
     void moveForward(){
         currentMove = MoveEnum::FORWARD;
-        PID::setPIDDesiredPulse(STRAIGHT_SPEED, STRAIGHT_SPEED);
     }
 
     void turnRight(){
         currentMove = MoveEnum::TURN_RIGHT;
-        PID::setPIDDesiredPulse(TURNING_SPEED, -TURNING_SPEED);
     }
 
     void turnLeft(){
-        currentMove = MoveEnum::TURN_RIGHT;
-        PID::setPIDDesiredPulse(-TURNING_SPEED, TURNING_SPEED);
+        currentMove = MoveEnum::TURN_LEFT;
     }
 
     void uTurn(){
         currentMove = MoveEnum::UTURN;
-        PID::setPIDDesiredPulse(-TURNING_SPEED, TURNING_SPEED);
     }
 
     void stop(){
@@ -43,34 +39,59 @@ namespace Movement {
         PID::resetCoveredDistance();
     }
 
+    float computeScaledSpeed(float remainingDistance, float decelDistance, float minSpeed, float maxSpeed) {
+        if (remainingDistance <= 0) return 0;
+
+        float speedFactor = constrain(remainingDistance / decelDistance, 0.0f, 1.0f);
+        float scaledSpeed = minSpeed + (maxSpeed - minSpeed) * speedFactor;
+
+        return scaledSpeed;
+    }
+
     void runMovementController(){
         switch(currentMove){
             case MoveEnum::TURN_RIGHT: {
-                if(PID::getRightCoveredDistance() >= TURN_DISTANCE){
+                float remaining = TURN_DISTANCE - PID::getRightCoveredDistance();
+                if (remaining <= 0.1f) {
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
+                } else {
+                    float speed = computeScaledSpeed(remaining, DECEL_TURN_DISTANCE, MIN_TURNING_SPEED, MAX_TURNING_SPEED);
+                    PID::setPIDDesiredPulse(speed, -speed);
                 }
                 break;
             }
             case MoveEnum::TURN_LEFT: {
-                if(PID::getRightCoveredDistance() >= TURN_DISTANCE){
+                float remaining = TURN_DISTANCE - PID::getLeftCoveredDistance();
+                if (remaining <= 0.1f) {
                     stop();
                     Circuit::vUpdateRobotDirection(LEFT);
+                } else {
+                    float speed = computeScaledSpeed(remaining, DECEL_TURN_DISTANCE, MIN_TURNING_SPEED, MAX_TURNING_SPEED);
+                    PID::setPIDDesiredPulse(-speed, speed);
                 }
                 break;
             }
             case MoveEnum::FORWARD: {
-                if(PID::getCoveredDistance() >= FORWARD_DISTANCE){
+                float remaining = FORWARD_DISTANCE - PID::getCoveredDistance();
+                if (remaining <= 0.1f) {
                     endMove();
                     Circuit::vUpdateRobotPosition();
+                } else {
+                    float speed = computeScaledSpeed(remaining, DECEL_FORWARD_DISTANCE, MIN_STRAIGHT_SPEED, MAX_STRAIGHT_SPEED);
+                    PID::setPIDDesiredPulse(speed, speed);
                 }
                 break;
             }
             case MoveEnum::UTURN: {
-                if(PID::getRightCoveredDistance() >= TURN_DISTANCE*2){
+                float remaining = TURN_DISTANCE * 2 - PID::getRightCoveredDistance();
+                if (remaining <= 0.1f) {
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
                     Circuit::vUpdateRobotDirection(RIGHT);
+                } else {
+                    float speed = computeScaledSpeed(remaining, DECEL_TURN_DISTANCE, MIN_TURNING_SPEED, MAX_TURNING_SPEED);
+                    PID::setPIDDesiredPulse(-speed, speed);
                 }
                 break;
             }
