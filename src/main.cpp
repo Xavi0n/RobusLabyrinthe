@@ -18,6 +18,7 @@ bool getIRDetection();
 void printDirection();
 bool isTimePast(int seconds);
 void resetTimer();
+void whistleDetection();
 
 //-----------------------------
 // MAIN CODE
@@ -30,20 +31,6 @@ void setup() {
     startMillis = millis();
     Movement::initMovement();
     
-}
-
-//This functions needs to be above loop() for it to be called
-void whistleDetection(){
-    bool whistleLoopEnd = false;
-    while(whistleLoopEnd == false)
-    {
-        //Make sure to connect whistle detector's out to pin A2
-        if(analogRead(A2) > WHISTLE_THRESHOLD)
-        {
-            whistleLoopEnd = true;
-            isWhistleBlown = true;
-        }
-    }
 }
 
 void loop() {
@@ -120,4 +107,17 @@ bool getIRDetection(){
     int isGreenLedOn = analogRead(A0) < LED_THRESHOLD;
     int isRedLedOn = analogRead(A1) < LED_THRESHOLD;
     return isGreenLedOn && isRedLedOn;
+}
+
+void whistleDetection(){
+    bool whistleLoopEnd = false;
+    while(whistleLoopEnd == false)
+    {
+        //Make sure to connect whistle detector's out to pin A2
+        if(analogRead(A2) > WHISTLE_THRESHOLD)
+        {
+            whistleLoopEnd = true;
+            isWhistleBlown = true;
+        }
+    }
 }
