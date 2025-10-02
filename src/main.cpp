@@ -8,9 +8,8 @@ constexpr int IR_GREEN_PIN = 48;
 constexpr int IR_RED_PIN = 49;
 constexpr int LED_THRESHOLD = 650;
 unsigned long startMillis = 0;
-Movement::MoveEnum lastMove = Movement::MoveEnum::NONE;
-//ADJUST THIS VALUE LATER, BECAUSE I DON'T KNOW HOW HIGH OR HOW LOW IT NEEDS TO BE!!!!!
 constexpr int WHISTLE_THRESHOLD = 1;
+
 bool isWhistleBlown = false;
 bool invalidLastCheck = false;
 
@@ -34,40 +33,20 @@ void setup() {
 }
 
 void loop() {
-    //printDirection();
-    /*
-    Movement::MoveEnum currentMove = Movement::getCurrentMove();
-    if (lastMove != currentMove) {
-        if(currentMove == Movement::MoveEnum::NONE){
-            resetTimer();
-        }
-
-        lastMove = currentMove;
-    }
-
-    if(isTimePast(5)){
-        Movement::turnRight();
-    }
-
-    Movement::runMovementController();*/
-
     if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
         Movement::runMovementController();
+        if(Circuit::bIsFinished()) while(1){};
+    } else if(!getIRDetection() && !Circuit::bDangerCheck()) {
+        invalidLastCheck = false;
+        Movement::moveForward();
+    } else if(invalidLastCheck) {
+        Movement::uTurn();
     } else {
-        if(Circuit::bIsFinished()){
-            while(1){}
+        if(Circuit::vUpdateRobotDirection(RIGHT) && !Circuit::bDangerCheck()){
+            Movement::turnRight();
         }
-        else if (!getIRDetection() && !Circuit::bDangerCheck()) {
-            invalidLastCheck = false;
-            Movement::moveForward();
-        } else {
-            if (invalidLastCheck == true) {
-                Movement::uTurn();
-            } else {
-                Movement::turnRight();
-                invalidLastCheck = true;
-            }
-        }
+        Circuit::vUpdateRobotDirection(LEFT);
+        invalidLastCheck = true;
     }
  
     delay(5);
@@ -76,14 +55,6 @@ void loop() {
 //-----------------------------
 // FUNCTIONS
 //-----------------------------
-bool isTimePast(int seconds){
-    return millis() - startMillis >= (unsigned long)seconds * 1000;
-}
-
-void resetTimer(){
-    startMillis = millis();
-}
-
 void printDirection(){
     switch (Circuit::iGetUcRobotDirection()) {
         case NORTH:
@@ -103,6 +74,7 @@ void printDirection(){
             break;
     }
 }
+
 bool getIRDetection(){
     int isGreenLedOn = analogRead(A0) < LED_THRESHOLD;
     int isRedLedOn = analogRead(A1) < LED_THRESHOLD;
