@@ -25,6 +25,7 @@ namespace Circuit {
     bool bGetNearbyLines(unsigned char ucRobotDirection, unsigned char ucWhereIsRobotX, unsigned char ucWhereIsRobotY);
     bool bDangerCheck ();
     bool bIsFinished();
+    void vSetDirection(int);
     int iGetUcRobotDirection();
 }
 

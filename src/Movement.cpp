@@ -52,7 +52,7 @@ namespace Movement {
         switch(currentMove){
             case MoveEnum::TURN_RIGHT: {
                 float remaining = TURN_DISTANCE - PID::getRightCoveredDistance();
-                if (remaining <= 0.1f) {
+                if (remaining <= 0.2f) {
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
                 } else {
@@ -63,7 +63,7 @@ namespace Movement {
             }
             case MoveEnum::TURN_LEFT: {
                 float remaining = TURN_DISTANCE - PID::getLeftCoveredDistance();
-                if (remaining <= 0.1f) {
+                if (remaining <= 0.2f) {
                     stop();
                     Circuit::vUpdateRobotDirection(LEFT);
                 } else {
@@ -74,7 +74,7 @@ namespace Movement {
             }
             case MoveEnum::FORWARD: {
                 float remaining = FORWARD_DISTANCE - PID::getCoveredDistance();
-                if (remaining <= 0.1f) {
+                if (remaining <= 0.2f) {
                     endMove();
                     Circuit::vUpdateRobotPosition();
                 } else {
@@ -105,5 +105,8 @@ namespace Movement {
 
     MoveEnum getCurrentMove(){
         return currentMove;
+    }
+    MoveEnum getLastMove(){
+        return lastMove;
     }
 }

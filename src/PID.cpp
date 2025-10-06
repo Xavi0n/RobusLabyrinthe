@@ -82,19 +82,6 @@ namespace PID{
         lastLeftError = leftMotorError;
         lastRightError = rightMotorError;
         previousTime = currentTime;
-
-        // Debug
-        
-        Serial.print(">");
-        Serial.print("TotalRightPulse:");
-        Serial.print(rightTotalPulse);
-        Serial.print(",");
-        Serial.print("RightCoveredDistance:");
-        Serial.print(getRightCoveredDistance());
-        Serial.print("DistanceToReach:");
-        Serial.print(14.5f);
-        Serial.print(",");
-        Serial.println();
     }
 
     void reset(){
@@ -117,9 +104,8 @@ namespace PID{
     }
 
     float getLeftCoveredDistance(){
-        float distanceEnPouce = abs(leftTotalPulse) / PULSE_PER_TURN * ROUE_DIAMETRE;
-        float distance = distanceEnPouce * POUCE_TO_CM;
-        return distance;
+        float distance_cm = abs(leftTotalPulse) / PULSE_PER_TURN * (PI * ROUE_DIAMETRE) * POUCE_TO_CM;
+        return distance_cm;
     }
 
     void resetCoveredDistance(){

@@ -97,7 +97,6 @@ namespace Circuit{
             case NORTH:
                 if (uctWhereAreLines[ucWhereIsRobotY + 1][ucWhereIsRobotX] == 1)
                 {                                                               
-                    Serial.println("Line in front");
                     bLineInFront = true;
                 }
                 break;
@@ -105,7 +104,6 @@ namespace Circuit{
             case EAST:
                 if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX+1] == 1)
                 {                                                               
-                    Serial.println("Line in front");
                     bLineInFront = true;
                 }
                 break;
@@ -113,7 +111,6 @@ namespace Circuit{
             case SOUTH:
                 if (uctWhereAreLines[ucWhereIsRobotY-1][ucWhereIsRobotX] == 1)
                 {                                                           
-                    Serial.println("Line in front");
                     bLineInFront = true;
                 }
                 break;
@@ -121,7 +118,6 @@ namespace Circuit{
             case WEST:
                 if (uctWhereAreLines[ucWhereIsRobotY][ucWhereIsRobotX - 1] == 1)
                 {
-                    Serial.println("Line in front");
                     bLineInFront = true;
                 }
                 break;
@@ -138,5 +134,9 @@ namespace Circuit{
 
     bool bIsFinished(){
         return ucWhereIsRobotY >= 19;
+    }
+
+    void vSetDirection(int direction){
+        return ucWhereIsRobotY = direction;
     }
 }

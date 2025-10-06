@@ -12,12 +12,14 @@ constexpr int WHISTLE_THRESHOLD = 1;
 
 bool isWhistleBlown = false;
 bool invalidLastCheck = false;
+bool finishedAck = false;
 
 bool getIRDetection();
 void printDirection();
 bool isTimePast(int seconds);
 void resetTimer();
 void whistleDetection();
+void dance();
 
 //-----------------------------
 // MAIN CODE.
@@ -29,27 +31,46 @@ void setup() {
     Serial.begin(115200);
     startMillis = millis();
     Movement::initMovement();
-    
 }
 
 void loop() {
     if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
         Movement::runMovementController();
-        if(Circuit::bIsFinished()) while(1){};
-    } else if(!getIRDetection() && !Circuit::bDangerCheck()) {
-        invalidLastCheck = false;
-        Movement::moveForward();
-    } else if(invalidLastCheck) {
-        Movement::uTurn();
-    } else {
-        Circuit::vUpdateRobotDirection(RIGHT);
-        if(!Circuit::bDangerCheck()){
-            Movement::turnRight();
-            invalidLastCheck = true;
-        }else {
-            Movement::turnLeft();
+    }
+    else{
+        if(Circuit::bIsFinished() && !finishedAck){
+            Movement::uTurn();
+            finishedAck = true;
         }
-        Circuit::vUpdateRobotDirection(LEFT);
+        else if(!getIRDetection() && !Circuit::bDangerCheck()) {
+            invalidLastCheck = false;
+            Movement::moveForward();
+            return;
+        } else if(invalidLastCheck && Circuit::iGetUcRobotDirection() != NORTH) {
+            Movement::uTurn();
+            return;
+        } else {
+            Circuit::vUpdateRobotDirection(RIGHT);
+            if (!Circuit::bDangerCheck()) {
+                Circuit::vUpdateRobotDirection(LEFT);
+                Movement::turnRight();
+                invalidLastCheck = true;
+                return;
+            }
+            Circuit::vUpdateRobotDirection(LEFT);
+
+            Circuit::vUpdateRobotDirection(LEFT);
+            if (!Circuit::bDangerCheck()) {
+                Circuit::vUpdateRobotDirection(RIGHT);
+                Movement::turnLeft();
+                invalidLastCheck = true;
+                return;
+            }
+            Circuit::vUpdateRobotDirection(RIGHT);
+
+            Movement::turnLeft();
+            return;
+        }
     }
  
     delay(5);
@@ -58,22 +79,38 @@ void loop() {
 //-----------------------------
 // FUNCTIONS
 //-----------------------------
+void dance(){
+    while(true){
+        if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
+            Movement::runMovementController();
+        }else{
+            if(Movement::getLastMove() == Movement::MoveEnum::TURN_RIGHT){
+                Movement::uTurn();
+            }else{
+                Movement::turnRight();
+            }
+        }
+
+        delay(5);
+    }
+}
+
 void printDirection(){
     switch (Circuit::iGetUcRobotDirection()) {
         case NORTH:
-            Serial.println("Face: North");
+            Serial.print("Face: North");
             break;
         case EAST:
-            Serial.println("Face: Est");
+            Serial.print("Face: Est");
             break;
         case SOUTH:
-            Serial.println("Face: Sud");
+            Serial.print("Face: Sud");
             break;
         case WEST:
-            Serial.println("Face: Ouest");
+            Serial.print("Face: Ouest");
             break;
         default:
-            Serial.println("Facing: IDK");
+            Serial.print("Facing: IDK");
             break;
     }
 }

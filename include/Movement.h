@@ -10,7 +10,7 @@
 namespace Movement {
     constexpr float FORWARD_DISTANCE = 51;
     //constexpr float TURN_DISTANCE = 14.92f;
-    constexpr float TURN_DISTANCE = 14.60f;
+    constexpr float TURN_DISTANCE = 14.35f;
     constexpr int MAX_TURNING_SPEED = 5500;
     constexpr int MIN_TURNING_SPEED = 1500;
     constexpr int MAX_STRAIGHT_SPEED = 7000;
@@ -31,5 +31,6 @@ namespace Movement {
     void endMove();
     void stopCheck();
     MoveEnum getCurrentMove();
+    MoveEnum getLastMove();
 }
 #endif
