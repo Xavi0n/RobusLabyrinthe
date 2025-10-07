@@ -132,8 +132,12 @@ namespace Circuit{
         return bDangerFlag;
     }
 
-    bool bIsFinished(){
+    bool bIsAtFinish(){
         return ucWhereIsRobotY >= 19;
+    }
+
+    bool bIsAtStart(){
+        return ucWhereIsRobotY <= 1;
     }
 
     void vSetDirection(int direction){
