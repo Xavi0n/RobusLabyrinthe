@@ -125,6 +125,24 @@ namespace Circuit{
         return bLineInFront;
     }
 
+    bool bDangerCheckRight()
+    {
+        bool obstacleOnRight = false;
+        vUpdateRobotDirection(RIGHT);
+        obstacleOnRight = bDangerCheck();
+        vUpdateRobotDirection(LEFT);
+        return obstacleOnRight;
+    }
+
+    bool bDangerCheckLeft()
+    {
+        bool obstacleOnLeft = false;
+        vUpdateRobotDirection(LEFT);
+        obstacleOnLeft = bDangerCheck();
+        vUpdateRobotDirection(RIGHT);
+        return obstacleOnLeft;
+    }
+
     bool bDangerCheck()
     {
         bool bDangerFlag = false;
@@ -138,9 +156,5 @@ namespace Circuit{
 
     bool bIsAtStart(){
         return ucWhereIsRobotY <= 1;
-    }
-
-    void vSetDirection(int direction){
-        return ucWhereIsRobotY = direction;
     }
 }

@@ -39,12 +39,22 @@ namespace Movement {
         PID::resetCoveredDistance();
     }
 
-    float computeScaledSpeed(float remainingDistance, float decelDistance, float minSpeed, float maxSpeed) {
+    float computeScaledSpeed(float remainingDistance, float totalDistance,
+                         float accelDistance,
+                         float minSpeed, float maxSpeed) {
         if (remainingDistance <= 0) return 0;
 
-        float factor = constrain(remainingDistance / decelDistance, 0.0f, 1.0f);
-        float smoothFactor = pow(factor, 2.0f);
-        return minSpeed + (maxSpeed - minSpeed) * smoothFactor;
+        float coveredDistance = totalDistance - remainingDistance;
+
+        float accelFactor = constrain(coveredDistance / accelDistance, 0.0f, 1.0f);
+        float decelFactor = constrain(remainingDistance / accelDistance, 0.0f, 1.0f);
+
+        float accelSmooth = pow(accelFactor, 2.0f);
+        float decelSmooth = pow(decelFactor, 2.0f);
+
+        float speedFactor = min(accelSmooth, decelSmooth);
+
+        return minSpeed + (maxSpeed - minSpeed) * speedFactor;
     }
 
     void runMovementController(){
@@ -55,7 +65,13 @@ namespace Movement {
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
                 } else {
-                    float speed = computeScaledSpeed(remaining, DECEL_TURN_DISTANCE, MIN_TURNING_SPEED, MAX_TURNING_SPEED);
+                    float speed = computeScaledSpeed(
+                        remaining,
+                        TURN_DISTANCE,
+                        ACCEL_TURN_DISTANCE,
+                        MIN_TURNING_SPEED,
+                        MAX_TURNING_SPEED
+                    );
                     PID::setPIDDesiredPulse(speed, -speed);
                 }
                 break;
@@ -66,7 +82,13 @@ namespace Movement {
                     stop();
                     Circuit::vUpdateRobotDirection(LEFT);
                 } else {
-                    float speed = computeScaledSpeed(remaining, DECEL_TURN_DISTANCE, MIN_TURNING_SPEED, MAX_TURNING_SPEED);
+                    float speed = computeScaledSpeed(
+                        remaining,
+                        TURN_DISTANCE,
+                        ACCEL_TURN_DISTANCE,
+                        MIN_TURNING_SPEED,
+                        MAX_TURNING_SPEED
+                    );
                     PID::setPIDDesiredPulse(-speed, speed);
                 }
                 break;
@@ -77,7 +99,13 @@ namespace Movement {
                     endMove();
                     Circuit::vUpdateRobotPosition();
                 } else {
-                    float speed = computeScaledSpeed(remaining, DECEL_FORWARD_DISTANCE, MIN_STRAIGHT_SPEED, MAX_STRAIGHT_SPEED);
+                    float speed = computeScaledSpeed(
+                        remaining,
+                        TURN_DISTANCE,
+                        ACCEL_FORWARD_DISTANCE,
+                        MIN_TURNING_SPEED,
+                        MAX_TURNING_SPEED
+                    );
                     PID::setPIDDesiredPulse(speed, speed);
                 }
                 break;
@@ -89,7 +117,13 @@ namespace Movement {
                     Circuit::vUpdateRobotDirection(RIGHT);
                     Circuit::vUpdateRobotDirection(RIGHT);
                 } else {
-                    float speed = computeScaledSpeed(remaining, DECEL_TURN_DISTANCE, MIN_TURNING_SPEED, MAX_TURNING_SPEED);
+                    float speed = computeScaledSpeed(
+                        remaining,
+                        TURN_DISTANCE,
+                        ACCEL_FORWARD_DISTANCE,
+                        MIN_TURNING_SPEED,
+                        MAX_TURNING_SPEED
+                    );
                     PID::setPIDDesiredPulse(-speed, speed);
                 }
                 break;

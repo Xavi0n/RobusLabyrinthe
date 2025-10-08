@@ -26,8 +26,9 @@ namespace Circuit {
     bool bDangerCheck ();
     bool bIsAtFinish();
     bool bIsAtStart();
-    void vSetDirection(int);
     int iGetUcRobotDirection();
+    bool bDangerCheckRight();
+    bool bDangerCheckLeft();
 }
 
 #endif // CIRCUIT_H

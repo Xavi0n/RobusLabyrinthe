@@ -27,56 +27,66 @@ void setup() {
 }
 
 void loop() {
+    // Wait for whitle
     if(!isWhistleBlown){
         waitForWhistle();
     }
 
+    // Run the current movement if there is any
     if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
         Movement::runMovementController();
+        delay(5);
+        return;
     }
-    else if(Circuit::bIsAtFinish() && !reachedFinish){
+
+    // Check if the robot is at the finish
+    if(Circuit::bIsAtFinish() && !reachedFinish){
         Movement::uTurn();
         reachedFinish = true;
+        delayNextMove();
+        return;
     }
-    else if(Circuit::bIsAtStart() && reachedFinish){
+
+    // Check if the robot finished and went back
+    if(Circuit::bIsAtStart() && reachedFinish){
         dance();
+        return;
     }
-    else if(!getIRDetection() && !Circuit::bDangerCheck()) {
+
+    // Check if there is an obstacle in front
+    if(!getIRDetection() && !Circuit::bDangerCheck()) {
         invalidLastCheck = false;
         Movement::moveForward();
         delayNextMove();
         return;
-    } else if(invalidLastCheck && (Circuit::iGetUcRobotDirection() != NORTH && !reachedFinish) && (Circuit::iGetUcRobotDirection() != SOUTH && reachedFinish)) {
+    }
+
+    // Handle invalid check (last turn didnt work)
+    if(invalidLastCheck && ((Circuit::iGetUcRobotDirection() != NORTH && !reachedFinish) || (Circuit::iGetUcRobotDirection() != SOUTH && reachedFinish))) {
         Movement::uTurn();
         delayNextMove();
         return;
-    } else {
-        Circuit::vUpdateRobotDirection(RIGHT);
-        if (!Circuit::bDangerCheck()) {
-            Circuit::vUpdateRobotDirection(LEFT);
-            Movement::turnRight();
-            invalidLastCheck = true;
-            delayNextMove();
-            return;
-        }
-        Circuit::vUpdateRobotDirection(LEFT);
+    }
 
-        Circuit::vUpdateRobotDirection(LEFT);
-        if (!Circuit::bDangerCheck()) {
-            Circuit::vUpdateRobotDirection(RIGHT);
-            Movement::turnLeft();
-            invalidLastCheck = true;
-            delayNextMove();
-            return;
-        }
-        Circuit::vUpdateRobotDirection(RIGHT);
-
-        Movement::turnLeft();
+    // Check right and turn if there is no line
+    if (!Circuit::bDangerCheckRight()) {
+        Movement::turnRight();
+        invalidLastCheck = true;
         delayNextMove();
         return;
     }
- 
-    delay(5);
+
+    // Check left and turn if there is no line
+    if (!Circuit::bDangerCheckLeft()) {
+        Movement::turnLeft();
+        invalidLastCheck = true;
+        delayNextMove();
+        return;
+    }
+
+    // Default move
+    Movement::turnLeft();
+    delayNextMove();
 }
 
 //-----------------------------
