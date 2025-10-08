@@ -42,17 +42,16 @@ namespace Movement {
     float computeScaledSpeed(float remainingDistance, float decelDistance, float minSpeed, float maxSpeed) {
         if (remainingDistance <= 0) return 0;
 
-        float speedFactor = constrain(remainingDistance / decelDistance, 0.0f, 1.0f);
-        float scaledSpeed = minSpeed + (maxSpeed - minSpeed) * speedFactor;
-
-        return scaledSpeed;
+        float factor = constrain(remainingDistance / decelDistance, 0.0f, 1.0f);
+        float smoothFactor = pow(factor, 2.0f);
+        return minSpeed + (maxSpeed - minSpeed) * smoothFactor;
     }
 
     void runMovementController(){
         switch(currentMove){
             case MoveEnum::TURN_RIGHT: {
                 float remaining = TURN_DISTANCE - PID::getRightCoveredDistance();
-                if (remaining <= 0.2f) {
+                if (remaining <= 0.1f) {
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
                 } else {
@@ -63,7 +62,7 @@ namespace Movement {
             }
             case MoveEnum::TURN_LEFT: {
                 float remaining = TURN_DISTANCE - PID::getLeftCoveredDistance();
-                if (remaining <= 0.2f) {
+                if (remaining <= 0.1f) {
                     stop();
                     Circuit::vUpdateRobotDirection(LEFT);
                 } else {
@@ -85,7 +84,7 @@ namespace Movement {
             }
             case MoveEnum::UTURN: {
                 float remaining = TURN_DISTANCE * 2 - PID::getRightCoveredDistance();
-                if (remaining <= 0.4f) {
+                if (remaining <= 0.2f) {
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
                     Circuit::vUpdateRobotDirection(RIGHT);
