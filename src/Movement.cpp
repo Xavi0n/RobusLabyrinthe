@@ -111,7 +111,7 @@ namespace Movement {
                 break;
             }
             case MoveEnum::UTURN: {
-                float remaining = TURN_DISTANCE_RIGHT * 2 - PID::getRightCoveredDistance();
+                float remaining = UTURN_DISTANCE - PID::getRightCoveredDistance();
                 if (remaining <= 0.2f) {
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
@@ -119,7 +119,7 @@ namespace Movement {
                 } else {
                     float speed = computeScaledSpeed(
                         remaining,
-                        TURN_DISTANCE_RIGHT*2,
+                        UTURN_DISTANCE,
                         ACCEL_FORWARD_DISTANCE,
                         MIN_TURNING_SPEED,
                         MAX_TURNING_SPEED

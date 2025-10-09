@@ -71,14 +71,14 @@ void loop() {
     }
 
     // Check right and turn if there is no line
-    if (!Circuit::bDangerCheckRight() && Circuit::iGetUcRobotDirection() != EAST) {
+    if (!Circuit::bDangerCheckRight() && ((Circuit::iGetUcRobotDirection() != EAST && !reachedFinish) || (Circuit::iGetUcRobotDirection() != WEST && reachedFinish))) {
         Movement::turnRight();
         invalidLastCheck = true;
         return;
     }
 
     // Check left and turn if there is no line
-    if (!Circuit::bDangerCheckLeft() && Circuit::iGetUcRobotDirection() != WEST) {
+    if (!Circuit::bDangerCheckLeft() && ((Circuit::iGetUcRobotDirection() != WEST && !reachedFinish) || (Circuit::iGetUcRobotDirection() != EAST && reachedFinish))) {
         Movement::turnLeft();
         invalidLastCheck = true;
         return;
@@ -109,7 +109,7 @@ void dance(){
 }
 
 void delayNextMove(){
-    delay(250);
+    delay(100);
 }
 
 bool getIRDetection(){
