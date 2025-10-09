@@ -42,48 +42,32 @@ namespace Movement {
     float computeScaledSpeed(float remainingDistance, float totalDistance,
                          float accelDistance,
                          float minSpeed, float maxSpeed) {
-        if (remainingDistance <= 0.0f) return 0.0f;
-        if (accelDistance <= 0.0f || totalDistance <= 0.0f) return minSpeed;
+        if (remainingDistance <= 0) return 0;
 
         float coveredDistance = totalDistance - remainingDistance;
 
-        // Total distance too short to reach max speed — do smoothed min(max(accel, decel))
-        if (totalDistance < 2.0f * accelDistance) {
-            float accelFactor = constrain(coveredDistance / (totalDistance / 2.0f), 0.0f, 1.0f);
-            float decelFactor = constrain(remainingDistance / (totalDistance / 2.0f), 0.0f, 1.0f);
+        float accelFactor = constrain(coveredDistance / accelDistance, 0.0f, 1.0f);
+        float decelFactor = constrain(remainingDistance / accelDistance, 0.0f, 1.0f);
 
-            float speedFactor = min(accelFactor * accelFactor, decelFactor * decelFactor);
-            return minSpeed + (maxSpeed - minSpeed) * speedFactor;
-        }
+        float accelSmooth = pow(accelFactor, 2.0f);
+        float decelSmooth = pow(decelFactor, 2.0f);
 
-        // Otherwise, trapezoidal profile
-        if (coveredDistance < accelDistance) {
-            // Acceleration phase
-            float accelFactor = constrain(coveredDistance / accelDistance, 0.0f, 1.0f);
-            float smooth = accelFactor * accelFactor;
-            return minSpeed + (maxSpeed - minSpeed) * smooth;
-        } else if (remainingDistance < accelDistance) {
-            // Deceleration phase
-            float decelFactor = constrain(remainingDistance / accelDistance, 0.0f, 1.0f);
-            float smooth = decelFactor * decelFactor;
-            return minSpeed + (maxSpeed - minSpeed) * smooth;
-        } else {
-            // Cruise phase at maxSpeed
-            return maxSpeed;
-        }
+        float speedFactor = min(accelSmooth, decelSmooth);
+
+        return minSpeed + (maxSpeed - minSpeed) * speedFactor;
     }
 
     void runMovementController(){
         switch(currentMove){
             case MoveEnum::TURN_RIGHT: {
-                float remaining = TURN_DISTANCE - PID::getRightCoveredDistance();
+                float remaining = TURN_DISTANCE_RIGHT - PID::getRightCoveredDistance();
                 if (remaining <= 0.1f) {
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
                 } else {
                     float speed = computeScaledSpeed(
                         remaining,
-                        TURN_DISTANCE,
+                        TURN_DISTANCE_RIGHT,
                         ACCEL_TURN_DISTANCE,
                         MIN_TURNING_SPEED,
                         MAX_TURNING_SPEED
@@ -93,14 +77,14 @@ namespace Movement {
                 break;
             }
             case MoveEnum::TURN_LEFT: {
-                float remaining = TURN_DISTANCE - PID::getLeftCoveredDistance();
+                float remaining = TURN_DISTANCE_LEFT - PID::getLeftCoveredDistance();
                 if (remaining <= 0.1f) {
                     stop();
                     Circuit::vUpdateRobotDirection(LEFT);
                 } else {
                     float speed = computeScaledSpeed(
                         remaining,
-                        TURN_DISTANCE,
+                        TURN_DISTANCE_LEFT,
                         ACCEL_TURN_DISTANCE,
                         MIN_TURNING_SPEED,
                         MAX_TURNING_SPEED
@@ -127,7 +111,7 @@ namespace Movement {
                 break;
             }
             case MoveEnum::UTURN: {
-                float remaining = TURN_DISTANCE * 2 - PID::getRightCoveredDistance();
+                float remaining = TURN_DISTANCE_RIGHT * 2 - PID::getRightCoveredDistance();
                 if (remaining <= 0.2f) {
                     stop();
                     Circuit::vUpdateRobotDirection(RIGHT);
@@ -135,7 +119,7 @@ namespace Movement {
                 } else {
                     float speed = computeScaledSpeed(
                         remaining,
-                        TURN_DISTANCE*2,
+                        TURN_DISTANCE_RIGHT*2,
                         ACCEL_FORWARD_DISTANCE,
                         MIN_TURNING_SPEED,
                         MAX_TURNING_SPEED

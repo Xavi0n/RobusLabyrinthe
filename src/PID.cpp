@@ -82,6 +82,29 @@ namespace PID{
         lastLeftError = leftMotorError;
         lastRightError = rightMotorError;
         previousTime = currentTime;
+
+        Serial.print(">");
+        Serial.print("rawRight:");
+        Serial.print(rawRightMotorPulse);
+        Serial.print(",");
+        Serial.print("P:");
+        Serial.print(rightMotorError);
+        Serial.print(",");
+        Serial.print("I:");
+        Serial.print(iLeftError);
+        Serial.print(",");
+        Serial.print("D:");
+        Serial.print(dRightMotorError);
+        Serial.print(",");
+        Serial.print("OutRight:");
+        Serial.print(outRightMotor);
+        Serial.print(",");
+        Serial.print("DesiredRight:");
+        Serial.print(rightDesiredPulse);
+        Serial.print(",");
+        Serial.print("getRightCoveredDistance:");
+        Serial.print(getRightCoveredDistance());
+        Serial.println();
     }
 
     void reset(){

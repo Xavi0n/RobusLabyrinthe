@@ -39,14 +39,6 @@ void loop() {
         return;
     }
 
-    // Check if the robot is at the finish
-    if(Circuit::bIsAtFinish() && !reachedFinish){
-        Movement::uTurn();
-        reachedFinish = true;
-        delayNextMove();
-        return;
-    }
-
     // Check if the robot finished and went back
     if(Circuit::bIsAtStart() && reachedFinish){
         dance();
@@ -55,38 +47,46 @@ void loop() {
 
     // Check if there is an obstacle in front
     if(!getIRDetection() && !Circuit::bDangerCheck()) {
+        if(Movement::getLastMove() != Movement::MoveEnum::NONE){
+            delayNextMove();
+        }
         invalidLastCheck = false;
         Movement::moveForward();
-        delayNextMove();
+        return;
+    }
+
+    delayNextMove();
+
+    // Check if the robot is at the finish
+    if(Circuit::bIsAtFinish() && !reachedFinish){
+        Movement::uTurn();
+        reachedFinish = true;
         return;
     }
 
     // Handle invalid check (last turn didnt work)
     if(invalidLastCheck && ((Circuit::iGetUcRobotDirection() != NORTH && !reachedFinish) || (Circuit::iGetUcRobotDirection() != SOUTH && reachedFinish))) {
         Movement::uTurn();
-        delayNextMove();
         return;
     }
 
     // Check right and turn if there is no line
-    if (!Circuit::bDangerCheckRight()) {
+    if (!Circuit::bDangerCheckRight() && Circuit::iGetUcRobotDirection() != EAST) {
         Movement::turnRight();
         invalidLastCheck = true;
-        delayNextMove();
         return;
     }
 
     // Check left and turn if there is no line
-    if (!Circuit::bDangerCheckLeft()) {
+    if (!Circuit::bDangerCheckLeft() && Circuit::iGetUcRobotDirection() != WEST) {
         Movement::turnLeft();
         invalidLastCheck = true;
-        delayNextMove();
         return;
     }
 
     // Default move
     Movement::turnLeft();
-    delayNextMove();
+    return;
 }
 
 //-----------------------------
