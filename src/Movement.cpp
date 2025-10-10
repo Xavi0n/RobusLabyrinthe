@@ -30,10 +30,6 @@ namespace Movement {
     void stop(){
         PID::setPIDDesiredPulse(0, 0);
         PID::reset();
-        endMove();
-    }
-
-    void endMove(){
         lastMove = currentMove;
         currentMove = MoveEnum::NONE;
         PID::resetCoveredDistance();

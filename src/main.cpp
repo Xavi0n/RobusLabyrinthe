@@ -14,7 +14,6 @@ bool reachedFinish = false;
 
 bool getIRDetection();
 void waitForWhistle();
-void dance();
 void delayNextMove();
 
 //-----------------------------
@@ -35,13 +34,20 @@ void loop() {
     // Run the current movement if there is any
     if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
         Movement::runMovementController();
-        delay(5);
         return;
     }
 
-    // Check if the robot finished and went back
-    if(Circuit::bIsAtStart() && reachedFinish){
-        dance();
+    // Check if the robot is at the finish
+    if(Circuit::bIsAtFinish() && !reachedFinish){
+        Movement::uTurn();
+
+        while(true){
+            if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
+                Movement::runMovementController();
+            }
+
+            Movement::moveForward();
+        }
         return;
     }
 
@@ -56,13 +62,6 @@ void loop() {
     }
 
     delayNextMove();
-
-    // Check if the robot is at the finish
-    if(Circuit::bIsAtFinish() && !reachedFinish){
-        Movement::uTurn();
-        reachedFinish = true;
-        return;
-    }
 
     // Handle invalid check (last turn didnt work)
     if(invalidLastCheck && ((Circuit::iGetUcRobotDirection() != NORTH && !reachedFinish) || (Circuit::iGetUcRobotDirection() != SOUTH && reachedFinish))) {
@@ -92,22 +91,6 @@ void loop() {
 //-----------------------------
 // FUNCTIONS
 //-----------------------------
-void dance(){
-    while(true){
-        if (Movement::getCurrentMove() != Movement::MoveEnum::NONE) {
-            Movement::runMovementController();
-        }else{
-            if(Movement::getLastMove() == Movement::MoveEnum::TURN_RIGHT){
-                Movement::uTurn();
-            }else{
-                Movement::turnRight();
-            }
-        }
-
-        delay(5);
-    }
-}
-
 void delayNextMove(){
     delay(100);
 }

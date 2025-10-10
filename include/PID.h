@@ -10,7 +10,7 @@ namespace PID{
     constexpr float ROUE_DIAMETRE = 3.0f;
     const float kp = 0.01;
     const float ki = 0.005;
-    const float kd = 0.000;
+    const float kd = 0.001;
     const float maxIntegral = 1000.0;
 
     void initPID();

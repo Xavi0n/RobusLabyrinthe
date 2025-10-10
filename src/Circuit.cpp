@@ -153,7 +153,7 @@ namespace Circuit{
     }
 
     bool bIsAtFinish(){
-        return ucWhereIsRobotY >= 19;
+        return ucWhereIsRobotY >= 21;
     }
 
     bool bIsAtStart(){
